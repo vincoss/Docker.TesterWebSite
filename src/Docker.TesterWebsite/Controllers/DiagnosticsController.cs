@@ -1,0 +1,73 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+
+namespace Docker.TesterWebSite.Controllers
+{
+    [ApiController]
+    [Route("api/diagnostics")]
+    public class DiagnosticsController : ControllerBase
+    {
+        private readonly IOptionsSnapshot<AppSettings> _options;
+
+        public DiagnosticsController(IOptionsSnapshot<AppSettings> options)
+        {
+            if (options == null) throw new ArgumentNullException(nameof(options));
+
+            _options = options;
+        }
+
+        [HttpGet]
+        public IActionResult Get()
+        {
+            var result = new
+            {
+                Environment.HasShutdownStarted,
+                Environment.MachineName,
+                Environment.ExitCode,
+                Environment.CurrentManagedThreadId,
+                Environment.CurrentDirectory,
+                Environment.CommandLine,
+                Environment.NewLine,
+                Environment.OSVersion,
+                Environment.ProcessorCount,
+                Environment.Is64BitOperatingSystem,
+                Environment.StackTrace,
+                Environment.SystemPageSize,
+                Environment.TickCount,
+                Environment.TickCount64,
+                Environment.UserDomainName,
+                Environment.UserInteractive,
+                Environment.UserName,
+                Environment.Version,
+                Environment.WorkingSet,
+                Environment.SystemDirectory,
+                Environment.Is64BitProcess,
+                GetCommandLineArgs = Environment.GetCommandLineArgs(),
+                GetEnvironmentVariables = Environment.GetEnvironmentVariables(),
+                GetLogicalDrives = Environment.GetLogicalDrives()
+            };
+
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("getDataFileList")]
+        public IActionResult GetDataFileList()
+        {
+            var path = _options.Value.DataPath;
+
+            var result = new
+            {
+                DataPath = path,
+                Files = Directory.Exists(path) ? Directory.GetFiles(path) : null
+            };
+
+            return Ok(result);
+        }
+    }
+}
