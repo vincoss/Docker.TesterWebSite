@@ -5,11 +5,11 @@ NOTE:
 The samples are written for cmd.exe.
 
 ## Build & tag
-docker build --no-cache -t vincoss/dockertesterweb:1.0.0-windows .
+docker build -f Dockerfile.windows-x64 --no-cache -t vincoss/dockertesterweb:1.0.0-windows .
 docker build -f Dockerfile.ubuntu-x64 --no-cache -t vincoss/dockertesterweb:1.0.0-bionic .
 
 ## Run
-docker run -it --rm -p 8001:80 --name dockertesterweb -h dockertester --ip 10.1.2.3 -v dockertester:c:/temp/Docker.TesterWebSite vincoss/dockertesterweb:1.0.0-windows
+docker run -it --rm -p 8003:80 --name dockertesterweb -h dockertester --ip 10.1.2.3 -v dockertester:C:/Docker.TesterWebSite vincoss/dockertesterweb:1.0.0-windows
 
 ## Run Windows using Linux contaners
 docker run -it --rm -p 8003:80 --name dockertesterweb -h dockertester --ip 10.1.2.3 -v C:/Docker.TesterWebSite/:/var/appdata vincoss/dockertesterweb:1.0.0-bionic

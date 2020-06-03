@@ -13,6 +13,6 @@ ENV NAME dockertesterweb
 # Make ports available to the world outside this container for main web interface
 EXPOSE ${HTTP_PORT}
 
-VOLUME /var/appdata
+VOLUME C:/var/appdata
 
 ENTRYPOINT ["dotnet", "Docker.TesterWebSite.dll"]
