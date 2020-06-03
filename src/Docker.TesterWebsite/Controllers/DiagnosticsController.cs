@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -56,18 +58,31 @@ namespace Docker.TesterWebSite.Controllers
         }
 
         [HttpGet]
-        [Route("getDataFileList")]
-        public IActionResult GetDataFileList()
+        [Route("getAppDataFileList")]
+        public IActionResult GetAppDataFileList()
         {
             var path = _options.Value.DataPath;
 
             var result = new
             {
                 DataPath = path,
-                Files = Directory.Exists(path) ? Directory.GetFiles(path) : null
+                Files = Directory.Exists(path) ? Directory.GetFiles(path) : new[] { "Does not exits" }
             };
 
             return Ok(result);
+        }
+
+
+        [HttpGet]
+        [Route("getNetworkInfo")]
+        public IActionResult GetNetworkInfo()
+        {
+            var ipV4s = NetworkInterface.GetAllNetworkInterfaces()
+                        .Select(i => i.GetIPProperties().UnicastAddresses)
+                        .SelectMany(u => u)
+                        .Select(i => i.Address.ToString());
+
+                return Ok(ipV4s);
         }
     }
 }

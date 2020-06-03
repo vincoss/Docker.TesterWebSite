@@ -12,5 +12,10 @@
     <Folder Include="Services\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\..\Dockerfile.ubuntu-x64" Link="Dev\Dockerfile.ubuntu-x64" />
+    <None Include="..\..\Dockerfile.windows-x64" Link="Dev\Dockerfile.windows-x64" />
+  </ItemGroup>
+
 
 </Project>

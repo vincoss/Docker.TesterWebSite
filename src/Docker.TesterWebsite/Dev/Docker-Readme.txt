@@ -12,7 +12,7 @@ docker build -f Dockerfile.ubuntu-x64 --no-cache -t vincoss/dockertesterweb:1.0.
 docker run -it --rm -p 8001:80 --name dockertesterweb -h dockertester --ip 10.1.2.3 -v dockertester:c:/temp/Docker.TesterWebSite vincoss/dockertesterweb:1.0.0-windows
 
 ## Run Windows using Linux contaners
-docker run -it --rm -p 8003:80 --name dockertesterweb -h dockertester --ip 10.1.2.3 -v c:/temp/Docker.TesterWebSite:/var/appdata vincoss/dockertesterweb:1.0.0-bionic
+docker run -it --rm -p 8003:80 --name dockertesterweb -h dockertester --ip 10.1.2.3 -v C:/Docker.TesterWebSite/:/var/appdata vincoss/dockertesterweb:1.0.0-bionic
 
 ## Error logs
 docker logs --tail 50 --follow --timestamps dockertesterweb
@@ -23,8 +23,9 @@ docker inspect -f "{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}" doc
 ##------------------------------------------------ Test
 
 ## Browse
-https://localhost/api/diagnostics
-https://dockertester/api/diagnostics
-https://localhost:8003/api/diagnostics
-https://localhost:8003/api/diagnostics/getDataFileList
-https://{ip-here}/api/diagnostics
+http://localhost/api/diagnostics
+http://dockertester/api/diagnostics
+http://localhost:8003/api/diagnostics
+http://localhost:8003/api/diagnostics/getAppDataFileList
+http://localhost:8003/api/diagnostics/getNetworkInfo
+http://{ip-here}/api/diagnostics
