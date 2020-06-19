@@ -1,0 +1,18 @@
+# https://hub.docker.com/_/microsoft-dotnet-core
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-bionic-arm64v8 AS runtime
+
+ARG HTTP_PORT=80
+ARG APP_HOME=/var/app
+
+WORKDIR ${APP_HOME}
+COPY ["/src/Docker.TesterWebSite/bin/Release/netcoreapp3.1/publish/linux-arm/.", "./"]
+
+ENV HOME ${APP_HOME}
+ENV NAME dockertesterweb
+
+# Make ports available to the world outside this container for main web interface
+EXPOSE ${HTTP_PORT}
+
+VOLUME /var/appdata
+
+ENTRYPOINT ["./Docker.TesterWebSite"]

@@ -1,3 +1,3 @@
-# Docker Tester Website
+## Docker.TesterWebSite
 
-Helper ASP.NET Core Website to test deployed docker container
+Helper ASP.NET Core website to test deployed docker container.
