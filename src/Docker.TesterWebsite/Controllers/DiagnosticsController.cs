@@ -85,6 +85,15 @@ namespace Docker.TesterWebSite.Controllers
                 return Ok(ipV4s);
         }
 
-        // TODO: add write into volume
+        [HttpGet]
+        [Route("writeTestFile")]
+        public IActionResult WriteTestFile()
+        {
+            var path = Path.Combine(_options.Value.DataPath, $"{nameof(WriteTestFile)}.txt");
+
+            System.IO.File.WriteAllText(path, DateTime.Now.ToString());
+
+            return Ok(path);
+        }
     }
 }
