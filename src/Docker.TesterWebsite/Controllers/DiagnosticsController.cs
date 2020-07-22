@@ -121,5 +121,23 @@ namespace Docker.TesterWebSite.Controllers
 
             return Ok(items);
         }
+
+        [HttpGet]
+        [Route("createPfx")]
+        public IActionResult CreatePfx()
+        {
+            var ba = Utils.ReadResource("X509Sample.pfx.txt");
+            var pwd = "Pass@word1";
+
+            using (var certificate = new X509Certificate2(ba, pwd, X509KeyStorageFlags.Exportable | X509KeyStorageFlags.PersistKeySet))
+            using (var store = new X509Store(StoreLocation.CurrentUser))
+            {
+                store.Open(OpenFlags.ReadWrite);
+                store.Add(certificate);
+                store.Close();
+            }
+
+            return Ok();
+        }
     }
 }
