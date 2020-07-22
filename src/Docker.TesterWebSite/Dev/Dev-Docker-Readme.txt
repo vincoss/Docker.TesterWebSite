@@ -18,7 +18,7 @@ docker image push vincoss/dockertesterweb:1.0.0-bionic-arm64
 docker run -it --rm -p 8003:80 --name dockertesterweb -h dockertester -v dockertester:C:/Docker.TesterWebSite vincoss/dockertesterweb:1.0.0-windows
 
 ## Run Windows using Linux contaners
-docker run -it --rm -p 8003:80 --name dockertesterweb -h dockertester -v C:/Docker.TesterWebSite/:/appdata vincoss/dockertesterweb:1.0.0-bionic
+docker run -it --rm -p 8003:80 --name dockertesterweb -h dockertester -v c:/Docker.TesterWebSite/:/var/appdata vincoss/dockertesterweb:1.0.0-bionic
 docker run -it --rm -p 8003:80 --name dockertesterweb -h dockertester -v C:/Docker.TesterWebSite/:/var/appdata vincoss/dockertesterweb:1.0.0-bionic-arm64
 
 ## Error logs

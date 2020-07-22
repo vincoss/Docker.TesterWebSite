@@ -4,9 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Runtime.ConstrainedExecution;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+
 
 namespace Docker.TesterWebSite.Controllers
 {
@@ -94,6 +97,29 @@ namespace Docker.TesterWebSite.Controllers
             System.IO.File.WriteAllText(path, DateTime.Now.ToString());
 
             return Ok(path);
+        }
+
+        [HttpGet]
+        [Route("listCertificates")]
+        public IActionResult ListCertificates()
+        {
+            var items = new List<dynamic>();
+            var store = new X509Store(StoreLocation.CurrentUser);
+            store.Open(OpenFlags.ReadOnly);
+            var certificates = store.Certificates;
+            foreach (var certificate in certificates)
+            {
+                items.Add(new
+                {
+                    certificate.Subject,
+                    certificate.Issuer,
+                    certificate.IssuerName,
+                    certificate.FriendlyName,
+                    certificate.HasPrivateKey
+                });
+            }
+
+            return Ok(items);
         }
     }
 }

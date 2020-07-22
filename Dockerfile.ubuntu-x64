@@ -5,7 +5,7 @@ ARG HTTP_PORT=80
 ARG APP_HOME=/var/app
 
 WORKDIR ${APP_HOME}
-COPY ["/src/Docker.TesterWebsite/bin/Release/netcoreapp3.1/publish/linux-x64/.", "./"]
+COPY ["/src/Docker.TesterWebSite/bin/Release/netcoreapp3.1/publish/linux-x64/.", "./"]
 
 ENV HOME ${APP_HOME}
 ENV NAME dockertesterweb
