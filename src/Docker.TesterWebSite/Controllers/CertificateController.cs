@@ -78,7 +78,7 @@ namespace Docker.TesterWebSite.Controllers
             var pwd = "Pass@word1";
             var path = Path.Combine(_options.Value.DataPath, id);
 
-            using (var certificate = new X509Certificate2(path, pwd, X509KeyStorageFlags.DefaultKeySet | X509KeyStorageFlags.PersistKeySet))
+            using (var certificate = new X509Certificate2(path, pwd, X509KeyStorageFlags.DefaultKeySet))
             using (var store = new X509Store(StoreLocation.CurrentUser))
             {
                 store.Open(OpenFlags.ReadWrite);
