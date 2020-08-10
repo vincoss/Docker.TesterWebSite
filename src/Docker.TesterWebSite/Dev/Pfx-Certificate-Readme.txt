@@ -13,3 +13,6 @@
 	update-ca-certificates --fresh
 5. Check
 	if not found then import again
+
+## Get Thumbprint (Windows)
+Get-PfxCertificate -FilePath X509Sample.pfx

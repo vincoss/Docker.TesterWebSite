@@ -35,4 +35,7 @@ http://dockertester/api/diagnostics
 http://localhost:8003/api/diagnostics
 http://localhost:8003/api/diagnostics/getAppDataFileList
 http://localhost:8003/api/diagnostics/getNetworkInfo
+http://localhost:8003/api/certificate
+http://localhost:8003/api/certificate/FindCertificate
+
 http://{ip-here}/api/diagnostics

@@ -1,7 +1,9 @@
 ﻿using Docker.TesterWebSite.Dto;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
@@ -13,6 +15,16 @@ namespace Docker.TesterWebSite.Controllers
     [Route("api/certificate")]
     public class CertificateController : ControllerBase
     {
+        private readonly IOptionsSnapshot<AppSettings> _options;
+
+        public CertificateController(IOptionsSnapshot<AppSettings> options)
+        {
+            if (options == null) throw new ArgumentNullException(nameof(options));
+
+            _options = options;
+        }
+
+
         [HttpGet]
         public IActionResult Get()
         {
@@ -39,12 +51,34 @@ namespace Docker.TesterWebSite.Controllers
 
         [HttpGet]
         [Route("createPfx")]
-        public IActionResult CreatePfx()
+        public IActionResult CreatePfx(string id)
         {
             var ba = Utils.ReadResource("X509Sample.pfx.txt");
             var pwd = "Pass@word1";
 
-            using (var certificate = new X509Certificate2(ba, pwd, X509KeyStorageFlags.Exportable | X509KeyStorageFlags.PersistKeySet))
+            using (var certificate = new X509Certificate2(ba, pwd, X509KeyStorageFlags.DefaultKeySet | X509KeyStorageFlags.PersistKeySet))
+            using (var store = new X509Store(StoreLocation.CurrentUser))
+            {
+                store.Open(OpenFlags.ReadWrite);
+                store.Add(certificate);
+                store.Close();
+            }
+
+            return Ok("Success");
+        }
+
+        [HttpGet]
+        [Route("install")]
+        public IActionResult Install(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                id = "X509Sample.pfx";
+            }
+            var pwd = "Pass@word1";
+            var path = Path.Combine(_options.Value.DataPath, id);
+
+            using (var certificate = new X509Certificate2(path, pwd, X509KeyStorageFlags.DefaultKeySet | X509KeyStorageFlags.PersistKeySet))
             using (var store = new X509Store(StoreLocation.CurrentUser))
             {
                 store.Open(OpenFlags.ReadWrite);
@@ -64,18 +98,20 @@ namespace Docker.TesterWebSite.Controllers
                 id = "test";
             }
 
-            var store = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
-            store.Open(OpenFlags.ReadOnly);
-            X509Certificate2 cert = store.Certificates.OfType<X509Certificate2>().AsEnumerable().FirstOrDefault(c => c.Subject.Contains(id, StringComparison.OrdinalIgnoreCase));
-
-            if (cert != null)
+            using (var store = new X509Store(StoreLocation.CurrentUser))
             {
-                var dto = CertificateDto.Map(store, cert);
-                return Ok(dto);
+                store.Open(OpenFlags.ReadOnly);
+
+                X509Certificate2 cert = store.Certificates.OfType<X509Certificate2>().AsEnumerable().FirstOrDefault(c => c.Subject.Contains(id, StringComparison.OrdinalIgnoreCase));
+
+                if (cert != null)
+                {
+                    var dto = CertificateDto.Map(store, cert);
+                    return Ok(dto);
+                }
             }
 
             return Ok($"Not found: {id}");
-
         }
     }
 }
